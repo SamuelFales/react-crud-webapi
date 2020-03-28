@@ -23,7 +23,7 @@ export class Department extends Component{
 
      componentDidUpdate()
      {
-         
+      this.refreshList();
      }
 
     deleteDep(depid)
@@ -42,12 +42,19 @@ export class Department extends Component{
             (error) => {
                 this.setState({snackbaropen:true, snackbarmsg:'Error!'});
             })
+         
         }
     }
 
     refreshList()
     {
-          departmentService.getAll().then(data => this.setState({deps:data}));
+          departmentService.getAll().then(data => 
+                                            {
+                                                if(data.length !== this.state.deps.length) 
+                                                {
+                                                    this.setState({deps:data});
+                                                }
+                                            });
     }
     
 

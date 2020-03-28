@@ -4,7 +4,7 @@ import {Button, ButtonToolbar} from 'react-bootstrap';
 import {AddEmpModal} from './AddEmpModal';
 import {EditDepModal} from './EditEmpModal';
 import {Navigation} from '../Home/Navigation'
-import {authHeader} from '../../helpers/auth-header'
+import {employeeService} from '../../services/employeeService'
 
 
 export class Employee extends Component{
@@ -19,23 +19,17 @@ export class Employee extends Component{
         this.refreshList();
     }
 
-    //   componentDidUpdate(prevState,prevProps)
-    //   {
-    //          this.refreshList();
-    //   }
+    componentDidUpdate()
+    {
+        this.refreshList();
+    }
 
     deleteDep(empid)
     {
 
-        const requestOptions = {
-            method:'DELETE',
-            headers: authHeader()
-          }
-
         if(window.confirm("Certo disso?"))
         {
-            fetch('https://localhost:5001/api/employee/' + empid,requestOptions)
-        .then(res => res.json())
+        employeeService.del(empid)
         .then((result) =>
         {
           this.setState({snackbaropen:true, snackbarmsg:result});
@@ -49,12 +43,13 @@ export class Employee extends Component{
     refreshList()
     {
    
-      fetch('https://localhost:5001/api/employee')
-      .then(response => response.json())
-      .then(data => {
-        this.setState({emps:data});
-      }
-        );
+        employeeService.getAll().then(data => 
+                                            {
+                                                if(data.length !== this.state.emps.length) 
+                                                {
+                                                    this.setState({emps:data});
+                                                }
+                                            });
     }
 
 
