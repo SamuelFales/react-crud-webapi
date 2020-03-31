@@ -5,6 +5,7 @@ import {AddEmpModal} from './AddEmpModal';
 import {EditDepModal} from './EditEmpModal';
 import {Navigation} from '../Home/Navigation'
 import {employeeService} from '../../services/employeeService'
+import moment from 'moment';
 
 
 export class Employee extends Component{
@@ -79,7 +80,7 @@ export class Employee extends Component{
                                 <td>{emp.name}</td>
                                 <td>{emp.department}</td>
                                 <td>{emp.mail}</td>
-                                <td>{emp.doj}</td>
+                                <td>{moment(emp.doj).format("DD-MM-YYYY")}</td>
                                 <td>
                                     <ButtonToolbar>
                                         <Button className="mr-2" variant="info" 
@@ -91,7 +92,7 @@ export class Employee extends Component{
                                         empname = {empname}
                                         empdep = {empdep}
                                         empmail = {empmail}
-                                        empdoj = {empdoj} />
+                                        empdoj = {moment(empdoj).format("YYYY-MM-DD")} />
                                     </ButtonToolbar>
                                 </td>
                             </tr>
