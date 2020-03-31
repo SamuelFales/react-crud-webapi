@@ -1,4 +1,5 @@
 import {authHeader} from '../helpers/auth-header'
+import axios from 'axios';
 
 export const departmentService = {
     getAll,
@@ -8,82 +9,52 @@ export const departmentService = {
     put
 };
 
+
+const instance = axios.create({
+  baseURL: 'https://localhost:5001/api'
+});
+instance.defaults.headers = authHeader();
+
 function getAll() {
-
-    const requestOptions = {
-        method:'GET',
-        headers: authHeader()
-      }
-
-    return fetch('https://localhost:5001/api/department/', requestOptions).then(handleResponse);
-  
+  return instance.get('department/').then(handleResponse);
 }
 
-function get(depId)
-{
-    const requestOptions = {
-        method:'GET',
-        headers: authHeader()
-      }
-
-    return fetch('https://localhost:5001/api/department/' + depId , requestOptions).then(handleResponse);
-  
+function get(id) {
+  return instance.get('department/' + id).then(handleResponse);
 }
 
-function del(depId)
-{
-    const requestOptions = {
-        method:'DELETE',
-        headers: authHeader()
-      }
-
-      return fetch("https://localhost:5001/api/department/" + depId,requestOptions);
-       
+function del(id){
+  return instance.delete('department/' + id).then(handleResponse);
 }
 
 
-function post(nameDep)
-{
-    const requestOptions = {
-        method: 'POST',
-        headers: authHeader(), 
-        body:JSON.stringify({
-          name: nameDep
-        })
-      }
-      
-      return fetch("https://localhost:5001/api/department",requestOptions);
+function post(nameDep){
+    const dep = {
+      name: nameDep,
+    }
+
+  return instance.post('/department',dep);
+
 }
 
 function put(depId, depName)
 {
-    const requestOptions = {
-        method: 'PUT',
-        headers: authHeader(), 
-        body:JSON.stringify({
-          id:  depId,  
+      const dep = {
+        id:  depId,  
           name: depName
-        })
       }
       
-      return fetch("https://localhost:5001/api/department",requestOptions);
+  return instance.put('/department',dep);
 }
 
 
 function handleResponse(response) {
-    return response.text().then(text => {
-        const data = text && JSON.parse(text);
-        if (!response.ok) {
-            if (response.status === 401) {
-                // auto logout if 401 response returned from api
-                localStorage.removeItem('token');
-                //location.reload(true);
-            }
+  if (!response.ok){
+      if (response.status === 401){
+          localStorage.removeItem('token');
+      }
+      
+  }
 
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
-        }
-
-        return data;
-    });
+  return response.data;
 }

@@ -3,7 +3,8 @@ import {Modal,Button,Row,Col,Form} from 'react-bootstrap';
 
 import Snakbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
-import {authHeader} from '../../helpers/auth-header'
+import {departmentService} from '../../services/departmentService'
+import {employeeService} from '../../services/employeeService'
 
 
 export class AddEmpModal extends Component
@@ -17,8 +18,7 @@ export class AddEmpModal extends Component
 
     componentDidMount()
     {
-        fetch('https://localhost:5001/api/department')
-        .then(response => response.json())
+      departmentService.getAll()
         .then(data => {
             this.setState({deps:data});
         });
@@ -31,18 +31,10 @@ export class AddEmpModal extends Component
     handleSubmit(event){
       event.preventDefault();
       
-      const requestOptions = {
-        method: 'Post',
-        headers: authHeader(),
-        body:JSON.stringify({
-          name: event.target.EmpName.value,
-          department: event.target.EmpDep.value,
-          mail: event.target.EmpMail.value,
-          doj: event.target.EmpDoj.value
-      })
-      }
-
-      fetch("https://localhost:5001/api/employee",requestOptions)
+      employeeService.post( event.target.EmpName.value,
+                            event.target.EmpDep.value,
+                            event.target.EmpMail.value,
+                            event.target.EmpDoj.value)
       .then((result) =>
       {
         if (result.status === 201)
@@ -103,7 +95,7 @@ export class AddEmpModal extends Component
                         </Form.Group>
 
                         <Form.Group controlId="EmpDep">
-                          <Form.Label>Name:</Form.Label>
+                          <Form.Label>Department:</Form.Label>
                           <Form.Control as="select">
                               {this.state.deps.map(dep =>
                                 <option key={dep.id}>{dep.name}</option>
@@ -112,7 +104,7 @@ export class AddEmpModal extends Component
                         </Form.Group>
 
                         <Form.Group controlId="EmpMail">
-                          <Form.Label>Name:</Form.Label>
+                          <Form.Label>E-mail:</Form.Label>
                           <Form.Control
                             type="email"
                             name="EmpMail"
@@ -122,7 +114,7 @@ export class AddEmpModal extends Component
                         </Form.Group>
 
                         <Form.Group controlId="EmpDoj">
-                          <Form.Label>Name:</Form.Label>
+                          <Form.Label>Data of join:</Form.Label>
                           <Form.Control
                             type="date"
                             name="EmpDoj"

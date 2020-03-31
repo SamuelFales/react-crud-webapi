@@ -1,4 +1,5 @@
 import {authHeader} from '../helpers/auth-header'
+import axios from 'axios';
 
 export const employeeService = {
     getAll,
@@ -8,87 +9,65 @@ export const employeeService = {
     put
 };
 
+const instance = axios.create({
+    baseURL: 'https://localhost:5001/api'
+  });
+ instance.defaults.headers = authHeader();
+
 function getAll() {
-
-    const requestOptions = {
-        method:'GET',
-        headers: authHeader()
-      }
-
-    return fetch('https://localhost:5001/api/employee/', requestOptions).then(handleResponse);
-  
+    return instance.get('employee/').then(handleResponse);
 }
 
-function get(id)
-{
-    const requestOptions = {
-        method:'GET',
-        headers: authHeader()
-      }
-
-    return fetch('https://localhost:5001/api/employee/' + id , requestOptions).then(handleResponse);
-  
+function get(id){
+    return instance.get('employee/' + id).then(handleResponse);
 }
 
-function del(id)
-{
-    const requestOptions = {
-        method:'DELETE',
-        headers: authHeader()
-      }
-
-      return fetch("https://localhost:5001/api/employee/" + id,requestOptions);
-       
+function del(id){
+    return instance.delete('employee/' + id).then(handleResponse);
 }
 
-function post(name,department,mail,doj)
-{
-    const requestOptions = {
-        method: 'POST',
-        headers: authHeader(), 
-        body:JSON.stringify({
-            name: name,
-            department: department,
-            mail: mail,
-            doj: doj
-        })
-      }
+function post(name,department,mail,doj){
+    const emp = {
+        name: name,
+        department: department,
+        mail: mail,
+        doj: doj
+    }
+    
+    return instance.post('/employee',emp);
       
-      return fetch("https://localhost:5001/api/employee",requestOptions);
 }
 
-function put(id,name,department,mail,doj)
-{
-    const requestOptions = {
-        method: 'PUT',
-        headers: authHeader(), 
-        body:JSON.stringify({
-          id:  id,  
-          name: name,
-          department: department,
-          mail: mail,
-          doj: doj
-        })
-      }
-      
-      return fetch("https://localhost:5001/api/employee",requestOptions);
+function put(id,name,department,mail,doj){
+
+    const emp = {
+        id: id,
+        name: name,
+        department: department,
+        mail: mail,
+        doj: doj
+    }
+
+    return instance.put('/employee',emp);
+
 }
 
+const handleError = function(error) {
+     if (error.response) {
+  
+    } else {
+    console.error('Error Message:', error.message);
+    }
+   return Promise.reject(error.response || error.message);
+   }
 
 function handleResponse(response) {
-    return response.text().then(text => {
-        const data = text && JSON.parse(text);
-        if (!response.ok) {
-            if (response.status === 401) {
-                // auto logout if 401 response returned from api
-                localStorage.removeItem('token');
-                //location.reload(true);
-            }
-
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
+    if (!response.ok){
+        if (response.status === 401){
+            localStorage.removeItem('token');
         }
+        
+    }
 
-        return data;
-    });
+    return response.data;
 }

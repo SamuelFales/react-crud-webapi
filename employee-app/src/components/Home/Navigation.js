@@ -10,7 +10,7 @@ export class Navigation extends Component
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav>
-                        <NavLink className="d-inline p-2 bg-dark text-white" to="/">Home</NavLink>
+                        <NavLink className="d-inline p-2 bg-dark text-white" to="/home">Home</NavLink>
                         <NavLink className="d-inline p-2 bg-dark text-white" to="/department">Department</NavLink>
                         <NavLink className="d-inline p-2 bg-dark text-white" to="/employee">Employee</NavLink>
                     </Nav>

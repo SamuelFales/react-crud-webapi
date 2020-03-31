@@ -34,8 +34,6 @@ export  class Login extends Component {
             this.setState({snackbaropen:true, snackbarmsg:'opss.. Sem autorização!'});
 
         if(result.token.value !== null){
-          console.log(JSON.stringify(result.token));
-          console.log(result.token);
             localStorage.setItem('token', JSON.stringify(result.token));
             this.props.history.push('/home');
 
