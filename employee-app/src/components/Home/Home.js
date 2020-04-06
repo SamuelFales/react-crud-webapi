@@ -1,11 +1,11 @@
 import React,{Component} from 'react';
-import {Navigation} from '../Home/Navigation'
+import Navigation from '../Home/Navigation'
 
-export class Home extends Component{
+
+class Home extends Component{
 
     render(){
         return(
-            
             <div className="container" >
             <Navigation/>
             </div>
@@ -13,3 +13,6 @@ export class Home extends Component{
     }
 
 }
+
+ export default Home;
+

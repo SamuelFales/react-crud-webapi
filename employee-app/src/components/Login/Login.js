@@ -4,48 +4,44 @@ import Snakbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import './Login.css';
 import {userService} from '../../services/userService'
+import { connect } from 'react-redux'
+import { userActions } from '../../actions/index';
+import { withRouter } from 'react-router-dom';
 
 
-export  class Login extends Component {
+  class Login extends Component {
     constructor(props){
         super(props);
         this.state = {userId: "", userPassword: "", snackbaropen: false, snackbarmsg:''};
-        this.handleSubmit = this.handleSubmit.bind(this);
 
     }
-
-    // componentDidMount()
-    // {
-       
-    // }
 
     snackbarClose = (event) => {
       this.setState({snackbaropen:false});
     }
 
-    handleSubmit(event){
-      event.preventDefault();
+    componentDidMount() {
+      if(localStorage.getItem('token')){
+        console.log("home login");
+        this.props.history.push('/home');
+      }
+  }
+
     
-      userService.login(event.target.UserId.value,event.target.UserPassword.value)
-      .then((result) =>
-      {
+    login = event =>{
+      this.setState({ submitted: true });
+      const { UserId, UserPassword } = this.state;
+      const { dispatch } = this.props;
+      if (UserId && UserPassword) {
+        dispatch(userActions.login(UserId, UserPassword));
+      }
+  }
 
-        if (result.status === 401)
-            this.setState({snackbaropen:true, snackbarmsg:'opss.. Sem autorização!'});
 
-        if(result.token.value !== null){
-            localStorage.setItem('token', JSON.stringify(result.token));
-            this.props.history.push('/home');
-
-        }
-            
-      },
-      (error) => {
-        console.log(error);
-        this.setState({snackbaropen:true, snackbarmsg:'opss.. Algum erro na autenticação!'});
-      })
-
-    }
+  handleChange = prop => event => {
+    console.log('handleChange');
+    this.setState({ [prop]: event.target.value });
+};
 
   render() {
     return (
@@ -70,18 +66,18 @@ export  class Login extends Component {
 
             />  
 
-        <Form onSubmit={this.handleSubmit}>
+        <Form>
                 <Form.Group controlId="UserId">
                     <Form.Label>User:</Form.Label>
-                    <Form.Control type="text" placeholder="Enter user" required />
+                    <Form.Control type="text" placeholder="Enter user" required onChange={this.handleChange('UserId')} />
                 </Form.Group>
                 <Form.Group controlId="UserPassword">
                     <Form.Label>Password:</Form.Label>
-                    <Form.Control type="password" placeholder="Password" required />
+                    <Form.Control type="password" placeholder="Password" required onChange={this.handleChange('UserPassword')} />
                 </Form.Group>
-                <Button variant="primary" type="submit">
-                Login
-                </Button>
+                <Button variant="contained" color="primary"  onClick={(event)=>{this.login()}}>
+                            Login
+              </Button>
         </Form>
        
       </div>
@@ -89,3 +85,16 @@ export  class Login extends Component {
     );
   }
 }
+
+
+// const mapStateToProps = (state) =>{
+//   const { loggingIn } = state.authentication;
+//   return {
+//      loggingIn
+//   };
+// }
+
+
+export default connect(null,null)(Login);
+
+// export default withRouter(connect(mapStateToProps, null, null, { pure: false})(Login));

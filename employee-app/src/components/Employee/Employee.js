@@ -3,7 +3,7 @@ import {Table} from 'react-bootstrap';
 import {Button, ButtonToolbar} from 'react-bootstrap';
 import {AddEmpModal} from './AddEmpModal';
 import {EditDepModal} from './EditEmpModal';
-import {Navigation} from '../Home/Navigation'
+import Navigation from '../Home/Navigation'
 import {employeeService} from '../../services/employeeService'
 import moment from 'moment';
 

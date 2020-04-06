@@ -3,12 +3,11 @@ import {Table} from 'react-bootstrap';
 import {Button, ButtonToolbar} from 'react-bootstrap';
 import {AddDepModal} from './AddDepModal';
 import {EditDepModal} from './EditDepModal';
-import {Navigation} from '../Home/Navigation'
+import Navigation from '../Home/Navigation'
 import {departmentService} from '../../services/departmentService'
 
 
-
-export class Department extends Component{
+ export class Department extends Component{
 
     constructor(props){
         super(props);

@@ -1,9 +1,20 @@
 import React, {Component} from 'react'
 import {NavLink} from 'react-router-dom'
-import {Navbar, Nav} from 'react-bootstrap'
+import {Button, Navbar, Nav} from 'react-bootstrap'
+import { userActions } from '../../actions/index'; 
+import { connect } from 'react-redux'
 
-export class Navigation extends Component
+class Navigation extends Component
 {
+    constructor(props){
+        super(props);
+    }
+
+    logout = event =>{
+         const { dispatch } = this.props;
+         dispatch(userActions.logout());
+    }
+
     render(){
         return(
             <Navbar bg="dark" expand="lg">
@@ -15,7 +26,17 @@ export class Navigation extends Component
                         <NavLink className="d-inline p-2 bg-dark text-white" to="/employee">Employee</NavLink>
                     </Nav>
                 </Navbar.Collapse>
+                <Button variant="contained" color="primary" className='d-inline p-2 bg-dark text-white' onClick={(event)=>{this.logout()}}>Exit</Button>
             </Navbar>
         )
     }
 }
+
+
+// const mapStateToProps = (state) =>{
+//     return {
+//         state
+//     };
+// }
+
+export default connect()(Navigation);

@@ -3,10 +3,10 @@ import {Modal,Button,Row,Col,Form} from 'react-bootstrap';
 import Snakbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import {departmentService} from '../../services/departmentService'
+import { connect } from 'react-redux'
 
 
-
-export class AddDepModal extends Component
+ export class AddDepModal extends Component
 {
     constructor(props){
         super(props);
@@ -96,3 +96,6 @@ export class AddDepModal extends Component
         )
     }
 }
+
+
+
